@@ -4,8 +4,8 @@
 Client Libraries
 ================
 
-EdgeDB client libraries are a bit higher level than usual database bindings.
-In particular, they contain:
+EdgeDB client libraries are higher level than typical database bindings. In
+particular, they contain:
 
 * Structured data retrieval
 * Connection pooling
@@ -14,7 +14,7 @@ In particular, they contain:
 Additionally, client libraries might provide:
 
 * Code generation for type-safe database access
-* Query builder
+* A query builder
 
 This is a **work-in-progress** reference for writing client libraries for
 EdgeDB.

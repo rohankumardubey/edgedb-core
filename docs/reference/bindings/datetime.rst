@@ -66,16 +66,16 @@ how they are stored in the database::
 EdgeDB client libraries round to the nearest even for all operations they
 perform that require rounding, in particular:
 
-1. Encoding timestamps *and* time deltas (see the :ref:`list of types
-   <ref_bindings_datetime>`) to the binary format if precision of the native
-   type is higher than microseconds.
-2. Decoding timestamps *and* time deltas from the binary format is precision
-   of native type is lower than microseconds (applies for JavaScript for
-   example)
-3. Converting from EdgeDB specific type (if there is one) to native type and
-   back (depending on the difference in precision)
-4. Parsing a string to an EdgeDB specific type (this operation is optional to
-   implement, but if it is implemented, it must obey the rules)
+* Encoding timestamps *and* time deltas (see the :ref:`list of datetime types
+  <ref_bindings_datetime>`) to the binary format if precision of the native
+  type is greater than microseconds.
+* Decoding timestamps *and* time deltas from the binary format if precision
+  of the native type is less than microseconds (applies to JavaScript for
+  example)
+* Converting from EdgeDB-specific type (if there is one) to a native type and
+  back when those types differ in their precision
+* Parsing a string to an EdgeDB-specific type (Implementation is not required,
+  but if it *is* implemented, it must use this rounding strategy.)
 
 .. lint-off
 
