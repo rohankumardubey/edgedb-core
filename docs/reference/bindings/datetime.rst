@@ -55,11 +55,13 @@ how they are stored in the database::
     2022-02-24T05:43:03.000001501Z → 2022-02-24T05:43:03.000002Z
     2022-02-24T05:43:03.000001499Z → 2022-02-24T05:43:03.000001Z
 
-Note as described in :ref:`datetime protocol documentation
-<ref_protocol_fmt_datetime>` the value is encoded as a *signed* microseconds
-delta since a fixed time. Some care must be taken when rounding negative
-microsecond values. See `tests for Rust implementation`_ for a good set of
-test cases.
+.. note::
+
+    As described in our :ref:`datetime protocol documentation
+    <ref_protocol_fmt_datetime>`, the value is encoded as a *signed*
+    microseconds delta since a fixed time. Some care must be taken when
+    rounding negative microsecond values. See `tests for Rust implementation`_
+    for a good set of test cases.
 
 Rounding to the nearest even applies to all operations that client libraries
 perform, in particular:
