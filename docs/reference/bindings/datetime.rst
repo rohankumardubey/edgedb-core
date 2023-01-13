@@ -36,15 +36,12 @@ Precision
 =========
 
 :eql:type:`datetime`, :eql:type:`duration`, :eql:type:`cal::local_datetime` and
-:eql:type:`cal::relative_duration` all have precision of **1 millisecond**.
-
-This means that if language-native type have a bigger precision such as
-nanosecond, client library has to round that timestamp when encoding it for
-EdgeDB.
-
-We use **rouding to the nearest even** for that operation. Here are some
-examples of timetamps with high precision, and how they are stored in the
-database::
+:eql:type:`cal::relative_duration` all have precision of **1 millisecond** in
+EdgeDB. If the language-native type is more precise (e.g., nanosecond
+precision), the client library must round the value when encoding it for
+storage in the database. We use a **round to the nearest even** strategy for
+that operation. Here are some examples of timestamps with high precision and
+how they are stored in the database::
 
     2022-02-24T05:43:03.123456789Z → 2022-02-24T05:43:03.123457Z
 
