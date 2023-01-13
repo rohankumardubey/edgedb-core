@@ -63,8 +63,8 @@ how they are stored in the database::
     rounding negative microsecond values. See `tests for Rust implementation`_
     for a good set of test cases.
 
-Rounding to the nearest even applies to all operations that client libraries
-perform, in particular:
+EdgeDB client libraries round to the nearest even for all operations they
+perform that require rounding, in particular:
 
 1. Encoding timestamps *and* time deltas (see the :ref:`list of types
    <ref_bindings_datetime>`) to the binary format if precision of the native
