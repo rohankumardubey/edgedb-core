@@ -419,7 +419,7 @@ encoded as:
 
     0x00 0x02 0x2b 0x35 0x9b 0xc4 0x10 0x00
 
-See :ref:`client libraries <ref_bindings_datetime>` section for more info
+See the :ref:`client libraries <ref_bindings_datetime>` section for more info
 about how to handle different precision when encoding data.
 
 
