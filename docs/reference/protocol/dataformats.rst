@@ -476,7 +476,7 @@ encoded as:
 
     0x00 0x00 0x00 0x0a 0x32 0xae 0xf6 0x00
 
-See :ref:`client libraries <ref_bindings_datetime>` section for more info
+See the :ref:`client libraries <ref_bindings_datetime>` section for more info
 about how to handle different precision when encoding data.
 
 
