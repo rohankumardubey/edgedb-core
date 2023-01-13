@@ -17,12 +17,12 @@ EdgeDB has 6 types related to date and time handling:
 * :eql:type:`cal::date_duration`
   (:ref:`binary format <ref_protocol_fmt_date_duration>`)
 
-Usually we try to map those types to the respective language-native types,
-with the following caveats:
+We generally map datetime values to a compatible native type in the binding's
+language when that native type meets all these criteria:
 
-* The type in standard library
-* It has enough range (EdgeDB has timestamps from year 1 to 9999)
-* And it has good enough precision (at least microseconds)
+* The type is in the language's standard library
+* The type has sufficient range (EdgeDB timestamps range from year 1 to 9999)
+* The type has sufficient precision (at least microseconds)
 
 If any of the above is not true we tend to provide a custom type in the client
 library itself that is convertible to whatever type language or any popular
