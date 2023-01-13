@@ -1888,6 +1888,7 @@ def range_for_ptrref(
             for_mutation=for_mutation,
             ctx=ctx,
         )
+        table.query.path_id = path_id
 
         qry = pgast.SelectStmt()
         qry.from_clause.append(table)
