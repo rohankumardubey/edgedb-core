@@ -548,7 +548,7 @@ For example, the ``cal::relative_duration`` value
     // months
     0x00 0x00 0x00 0x1f
 
-See :ref:`client libraries <ref_bindings_datetime>` section for more info
+See the :ref:`client libraries <ref_bindings_datetime>` section for more info
 about how to handle different precision when encoding data.
 
 
