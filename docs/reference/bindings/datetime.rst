@@ -24,12 +24,15 @@ language when that native type meets all these criteria:
 * The type has sufficient range (EdgeDB timestamps range from year 1 to 9999)
 * The type has sufficient precision (at least microseconds)
 
-If any of the above is not true we tend to provide a custom type in the client
-library itself that is convertible to whatever type language or any popular
-external dependencies have. Exceptions: JavaScript has millisecond precision on
-their ``Date`` type (which is actually a timestamp) and we decided that it's
-better to use that type by default even though it doesn't have enough
-precision.
+If any of the above criteria are *not* met, we usually provide a custom type
+in the client library that can be converted to a language-native type or a 
+type provided by a third-party library.
+
+.. note::
+
+    Strict adherence to this guideline doesn't make sense in some languages.
+    If you think this applies to your binding, either discuss it with us or
+    use your best judgment.
 
 
 Precision
