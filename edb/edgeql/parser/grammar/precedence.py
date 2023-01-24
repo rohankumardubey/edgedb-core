@@ -165,3 +165,15 @@ class P_DOUBLECOLON(Precedence, assoc='left', tokens=('DOUBLECOLON',)):
 
 class P_AT(Precedence, assoc='left', tokens=('AT',)):
     pass
+
+
+# Make all the cardinality qualifiers right associative,
+# so that we can parse `required multi <ident>` and similar
+# without needing to inline PtrQuals.
+class P_QUALS(
+    Precedence,
+    assoc='right',
+    tokens=('MULTI', 'REQUIRED', 'OPTIONAL', 'SINGLE'),
+    rel_to_last=None,
+):
+    pass
