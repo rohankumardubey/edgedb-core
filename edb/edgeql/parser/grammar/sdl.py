@@ -731,6 +731,11 @@ class PtrTarget(Nonterm):
         self.val = type_expr.val
         self.context = type_expr.val.context
 
+    def reduce_COLON_FullTypeExpr(self, *kids):
+        _, type_expr = kids
+        self.val = type_expr.val
+        self.context = type_expr.val.context
+
 
 class OptPtrTarget(Nonterm):
 
