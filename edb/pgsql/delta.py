@@ -4011,12 +4011,12 @@ class PointerMetaCommand(
             )
 
         tab = q(*old_ptr_stor_info.table_name)
+        id_col = 'id' if not ptr_table else 'source'
         target_col = old_ptr_stor_info.column_name
         aux_ptr_table = None
         aux_ptr_col = None
 
-        # Relation that will act as interator. Because casting is performed
-        # for all and each row, this is a simple select.
+        # Relation that will act as the interator.
         source_rel = f'SELECT * FROM {tab}'
         source_rel_alias = f'source_{uuidgen.uuid1mc()}'
 
@@ -4075,7 +4075,7 @@ class PointerMetaCommand(
             {cast_expr_ctes}
             UPDATE {tab} AS _update
             SET {qi(target_col)} = _conv_rel.val
-            FROM _conv_rel WHERE _update.id = _conv_rel.id
+            FROM _conv_rel WHERE _update.{id_col} = _conv_rel.id
         ''')
         self.pgops.add(dbops.Query(update_qry))
         trivial_cast_expr = qi(target_col)
@@ -4210,6 +4210,8 @@ class PointerMetaCommand(
 
         is_link = isinstance(pointer, s_links.Link)
         is_lprop = pointer.is_link_property(schema)
+        card = pointer.get_cardinality(schema)
+        ptr_table = is_link or is_link or card.is_multi()
 
         new_target = not_none(pointer.get_target(schema))
 
@@ -4281,8 +4283,10 @@ class PointerMetaCommand(
             )
 
         ptr_path_id = tgt_path_id.ptr_path()
-        src_path_id = ptr_path_id.src_path()
+        src_path_id = ptr_path_id.src_path() if not ptr_table else tgt_path_id
         assert src_path_id
+
+        # DEBUG: src_path_id = (default::Baar).>y[is std::str]
 
         external_rels = {
             src_path_id: compiler.new_external_rel(
@@ -4351,12 +4355,10 @@ class PointerMetaCommand(
         )
         assert isinstance(sql_tree, pg_ast.SelectStmt)
 
-        if src_path_id:
-            from edb.pgsql.compiler import pathctx
-
-            pathctx.get_path_output(
-                sql_tree, src_path_id, aspect='identity', env=env
-            )
+        from edb.pgsql.compiler import pathctx
+        pathctx.get_path_output(
+            sql_tree, src_path_id, aspect='identity', env=env
+        )
 
         # convert root query into last CTE
         ctes = list(sql_tree.ctes or [])
@@ -4375,25 +4377,23 @@ class PointerMetaCommand(
                 lexpr = pg_ast.StringConstant(val = '{"object_id": "'),
                 rexpr = pg_ast.Expr(
                     name='||',
-                    lexpr = pg_ast.ColumnRef(name='id'),
+                    lexpr = pg_ast.ColumnRef(name=('id', )),
                     rexpr = pg_ast.StringConstant(val = '"}'),
                 )
             )
-            column = pg_ast.ColumnRef(name=str(pointer.id))
             null_check = pg_ast.FuncCall(
                 name=("edgedb", "raise_on_null"),
                 args=[
-                    pg_ast.ColumnRef(name = "val"),
+                    pg_ast.ColumnRef(name = ("val", )),
                     pg_ast.StringConstant(val="not_null_violation"),
                     pg_ast.NamedFuncArg(name="msg", val=msg),
                     pg_ast.NamedFuncArg(name="detail", val=detail),
-                    pg_ast.NamedFuncArg(name="column", val=column),
                 ],
             )
             sql_tree = pg_ast.SelectStmt(
                 target_list = [
                     pg_ast.ResTarget(val = null_check),
-                    pg_ast.ResTarget(val = pg_ast.ColumnRef(name = "id"))
+                    pg_ast.ResTarget(val = pg_ast.ColumnRef(name = ("id", )))
                 ],
                 from_clause = [
                     pg_ast.RangeSubselect(
