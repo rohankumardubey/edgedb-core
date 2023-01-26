@@ -827,6 +827,17 @@ def trace_ConcretePointer(
     deps: List[Dependency] = []
     if isinstance(node.target, qlast.TypeExpr):
         deps.append(TypeDependency(texpr=node.target))
+
+        # If the link/property specifier was left off the SDL, fill it
+        # in here.
+        if isinstance(node, qlast.CreateConcreteUnknownPointer):
+            typ = _resolve_type_expr(node.target, ctx=ctx)
+            cls = (
+                qlast.CreateConcreteProperty
+                if typ.is_scalar() else qlast.CreateConcreteLink
+            )
+            node = node.replace(__class__=cls)
+
     elif isinstance(node.target, qlast.Expr):
         deps.append(ExprDependency(expr=node.target))
     elif node.target is None:
@@ -1269,7 +1280,7 @@ def _get_bases(
 def _resolve_type_expr(
     texpr: qlast.TypeExpr,
     *,
-    ctx: LayoutTraceContext,
+    ctx: LayoutTraceContext | DepTraceContext,
 ) -> qltracer.TypeLike:
 
     if isinstance(texpr, qlast.TypeName):
@@ -1321,7 +1332,7 @@ def _get_local_obj(
     tracer_type: Type[qltracer.NamedObject],
     sourcectx: Optional[parsing.ParserContext],
     *,
-    ctx: LayoutTraceContext,
+    ctx: LayoutTraceContext | DepTraceContext,
 ) -> Optional[qltracer.NamedObject]:
 
     obj = ctx.objects.get(refname)
@@ -1350,7 +1361,7 @@ def _resolve_type_name(
     ref: qlast.BaseObjectRef,
     *,
     tracer_type: Type[qltracer.NamedObject],
-    ctx: LayoutTraceContext,
+    ctx: LayoutTraceContext | DepTraceContext,
 ) -> qltracer.ObjectLike:
 
     refname = ctx.get_ref_name(ref)
@@ -1422,7 +1433,7 @@ def _resolve_schema_ref(
     type: Type[qltracer.NamedObject],
     sourcectx: Optional[parsing.ParserContext],
     *,
-    ctx: LayoutTraceContext,
+    ctx: LayoutTraceContext | DepTraceContext,
 ) -> s_obj.SubclassableObject:
     real_type = TRACER_TO_REAL_TYPE_MAP[type]
     try:
