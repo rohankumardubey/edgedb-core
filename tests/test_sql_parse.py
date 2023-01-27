@@ -1081,6 +1081,11 @@ class TestEdgeQLSelect(tb.BaseDocTest):
 
     def test_sql_parse_query_51(self):
         """
+        SELECT GREATEST(x, y, 0), LEAST(x, y, 100) FROM b
+        """
+
+    def test_sql_parse_query_51(self):
+        """
         SELECT * FROM b WHERE (c ILIKE 'blah%' COLLATE collation_name)
         """
 
