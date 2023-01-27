@@ -1074,6 +1074,16 @@ class TestEdgeQLSelect(tb.BaseDocTest):
         SELECT nullif(a, 3) FROM b
         """
 
+    def test_sql_parse_query_50(self):
+        """
+        SELECT ARRAY ((SELECT c FROM a)) FROM b
+        """
+
+    def test_sql_parse_query_51(self):
+        """
+        SELECT * FROM b WHERE (c ILIKE 'blah%' COLLATE collation_name)
+        """
+
     # The transaction_* settings are always on transaction level
 
     def test_sql_parse_transaction_29(self):
